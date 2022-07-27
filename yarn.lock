@@ -2501,6 +2501,24 @@
     npmlog "^4.1.2"
     write-file-atomic "^2.3.0"
 
+"@logicflow/core@^1.1.23", "@logicflow/core@^1.2.0-alpha.16":
+  version "1.2.0-alpha.16"
+  resolved "https://registry.npmjs.org/@logicflow/core/-/core-1.2.0-alpha.16.tgz#6c743265f9dcb8efc99dbfa2482f800facdf302d"
+  integrity sha512-srGLRXJ5Hi9N0rdNpO5/EFiMyblBUIHgli4ZP7/sIYv56I659UKE86x5SBn2P4acoCeeYZ1kJPpCJ1TNhj2cgw==
+  dependencies:
+    "@types/mousetrap" "^1.6.4"
+    mousetrap "^1.6.5"
+    preact "^10.4.8"
+
+"@logicflow/extension@^1.1.23":
+  version "1.2.0-alpha.16"
+  resolved "https://registry.npmjs.org/@logicflow/extension/-/extension-1.2.0-alpha.16.tgz#de960b1f73a18f9a2c4be4855fc0dbaa47e37dd7"
+  integrity sha512-5LOXqkqF5I2bfN9CDlF0xfru/fCzfm+HZ+pr8nQ1LNUuhmfUE7euAQISYPARaJcJ7cvKQQ1a/2VF2aN0XmIoBA==
+  dependencies:
+    "@logicflow/core" "^1.2.0-alpha.16"
+    ids "^1.0.0"
+    preact "^10.4.8"
+
 "@marionebl/sander@^0.6.0":
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/@marionebl/sander/-/sander-0.6.1.tgz#1958965874f24bc51be48875feb50d642fc41f7b"

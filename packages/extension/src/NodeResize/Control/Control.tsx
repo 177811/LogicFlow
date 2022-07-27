@@ -45,6 +45,7 @@ class Control extends Component<IProps> {
     }
     this.state = {};
     this.dragHandler = new StepDrag({
+      // @ts-ignore
       onDraging: this.onDraging,
       step,
     });
