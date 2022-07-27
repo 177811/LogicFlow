@@ -1,6 +1,6 @@
 {
   "name": "@helinda-test-logicflow/core",
-  "version": "1.1.29",
+  "version": "1.1.30",
   "description": "LogicFlow core, to quickly build flowchart editor",
   "main": "dist/entry.js",
   "module": "dist/logic-flow.js",
@@ -15,9 +15,9 @@
     "url": "https://github.com/177811/LogicFlow",
     "directory": "packages/core"
   },
- "publishConfig": {
-  "access": "public"
- },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --client-log-level warning --config scripts/webpack.config.dev.js",
     "clean": "rimraf dist lib esm cjs",
