@@ -248,6 +248,10 @@ export default class PolylineEdgeAnchorModel extends BaseEdgeAnchorModel {
 
   getData() {
     const data = super.getData();
+    // @ts-ignore
+    data.sourceAnchorId = this.sourceAnchorId;
+    // @ts-ignore
+    data.targetAnchorId = this.targetAnchorId;
     const pointsList = this.pointsList.map(({ x, y }) => ({ x, y }));
     return Object.assign({}, data, {
       pointsList,
