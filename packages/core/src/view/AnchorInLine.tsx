@@ -1,6 +1,6 @@
 import { h, Component } from 'preact';
 import { StepDrag } from '../util/drag';
-import { formateAnchorConnectValidateData, targetNodeInfo, targetEdgeInfo, distance } from '../util/node';
+import { formateAnchorConnectValidateData, targetNodeInfo, distance } from '../util/node';
 import Circle from './basic-shape/Circle';
 import Line from './basic-shape/Line';
 import { ElementState, EventType, OverlapMode } from '../constant/constant';
@@ -9,8 +9,9 @@ import GraphModel from '../model/GraphModel';
 // import EventEmitter from '../event/eventEmitter';
 import { AnchorConfig } from '../type';
 import { BaseNode } from './node';
+import { BaseEdgeModel } from '../model/edge/BaseEdgeModel';
+import BaseEdgeAnchor from './edge/BaseEdgeAnchor';
 import { cancelRaf, createRaf } from '../util/raf';
-import BaseEdgeAnchorModel from '../model/edge/BaseEdgeAnchorModel';
 
 type TargetNodeId = string;
 
@@ -19,13 +20,13 @@ interface IProps {
   // y: number;
   // id?: string;
   anchorData: AnchorConfig,
-  node: BaseNode,
+  edge: BaseEdgeAnchor,
   style?: Record<string, any>;
   hoverStyle?: Record<string, any>;
   edgeStyle?: Record<string, any>;
   anchorIndex: number;
   graphModel: GraphModel;
-  nodeModel: BaseNodeModel;
+  nodeOrEdgeModel: BaseEdgeModel|BaseNodeModel;
   setHoverOFF: Function;
 }
 
@@ -37,8 +38,8 @@ interface IState {
   draging: boolean;
 }
 
-class Anchor extends Component<IProps, IState> {
-  preTargetNode: BaseNodeModel|BaseEdgeAnchorModel;
+class AnchorInLine extends Component<IProps, IState> {
+  preTargetNode: BaseNodeModel;
   sourceRuleResults: Map<TargetNodeId, ConnectRuleResult>; // 不同的target，source的校验规则产生的结果不同
   targetRuleResults: Map<TargetNodeId, ConnectRuleResult>; // 不同的target，target的校验规则不同
   dragHandler: StepDrag;
@@ -65,9 +66,9 @@ class Anchor extends Component<IProps, IState> {
     const {
       anchorData,
       style,
-      node,
+      edge,
     } = this.props;
-    const anchorShape = node.getAnchorShape(anchorData);
+    const anchorShape = edge.getAnchorShape(anchorData);
     if (anchorShape) return anchorShape;
     const { x, y } = anchorData;
     const hoverStyle = {
@@ -91,18 +92,18 @@ class Anchor extends Component<IProps, IState> {
   }
   onDragStart = ({ event }) => {
     const {
-      anchorData, nodeModel, graphModel,
+      anchorData, nodeOrEdgeModel, graphModel,
     } = this.props;
     const { overlapMode } = graphModel;
-    // nodeModel.setSelected(true);
-    graphModel.selectNodeById(nodeModel.id);
-    if (overlapMode !== OverlapMode.INCREASE && nodeModel.autoToFront) {
-      graphModel.toFront(nodeModel.id);
+    // nodeOrEdgeModel.setSelected(true);
+    graphModel.selectEdgeById(nodeOrEdgeModel.id);
+    if (overlapMode !== OverlapMode.INCREASE && nodeOrEdgeModel.autoToFront) {
+      graphModel.toFront(nodeOrEdgeModel.id);
     }
     graphModel.eventCenter.emit(EventType.ANCHOR_DRAGSTART, {
       data: anchorData,
       e: event,
-      nodeModel,
+      nodeOrEdgeModel,
     });
     this.setState({
       startX: anchorData.x,
@@ -113,7 +114,7 @@ class Anchor extends Component<IProps, IState> {
   };
   onDraging = ({ event }) => {
     const {
-      graphModel, nodeModel, anchorData,
+      graphModel, nodeOrEdgeModel, anchorData,
     } = this.props;
     const {
       transformModel,
@@ -168,7 +169,7 @@ class Anchor extends Component<IProps, IState> {
     eventCenter.emit(EventType.ANCHOR_DRAG, {
       data: anchorData,
       e: event,
-      nodeModel,
+      nodeOrEdgeModel,
     });
   };
   onDragEnd = (event) => {
@@ -190,24 +191,23 @@ class Anchor extends Component<IProps, IState> {
 
   checkEnd = (event) => {
     const {
-      graphModel, nodeModel, anchorData: { x, y, id },
+      graphModel, nodeOrEdgeModel, anchorData: { x, y, id },
     } = this.props;
-    // nodeModel.setSelected(false);
+    // nodeOrEdgeModel.setSelected(false);
     /* 创建边 */
     const { edgeType } = graphModel;
     const { endX, endY, draging } = this.state;
-    const nodeInfo = targetNodeInfo({ x: endX, y: endY }, graphModel);
-    const edgeInfo = targetEdgeInfo({ x: endX, y: endY }, graphModel);
+    const info = targetNodeInfo({ x: endX, y: endY }, graphModel);
     // 为了保证鼠标离开的时候，将上一个节点状态重置为正常状态。
     if (this.preTargetNode && this.preTargetNode.state !== ElementState.DEFAULT) {
       this.preTargetNode.setElementState(ElementState.DEFAULT);
     }
     // 没有draging就结束边
     if (!draging) return;
-    if ((!edgeInfo || !edgeInfo.edge) && nodeInfo && nodeInfo.node) {
-      const targetNode = nodeInfo.node;
-      const anchorId = nodeInfo.anchor.id;
-      const targetInfoId = `${nodeModel.id}_${targetNode.id}_${anchorId}_${id}`;
+    if (info && info.node) {
+      const targetNode = info.node;
+      const anchorId = info.anchor.id;
+      const targetInfoId = `${nodeOrEdgeModel.id}_${targetNode.id}_${anchorId}_${id}`;
       const {
         isAllPass: isSourcePass,
         msg: sourceMsg,
@@ -220,18 +220,18 @@ class Anchor extends Component<IProps, IState> {
         targetNode.setElementState(ElementState.DEFAULT);
         const edgeModel = graphModel.addEdge({
           type: edgeType,
-          sourceNodeId: nodeModel.id,
+          sourceNodeId: nodeOrEdgeModel.id,
           sourceAnchorId: id,
           startPoint: { x, y },
-          targetNodeId: nodeInfo.node.id,
-          targetAnchorId: nodeInfo.anchor.id,
-          endPoint: { x: nodeInfo.anchor.x, y: nodeInfo.anchor.y },
+          targetNodeId: info.node.id,
+          targetAnchorId: info.anchor.id,
+          endPoint: { x: info.anchor.x, y: info.anchor.y },
         });
         const { anchorData } = this.props;
         graphModel.eventCenter.emit(EventType.ANCHOR_DROP, {
           data: anchorData,
           e: event,
-          nodeModel,
+          nodeOrEdgeModel,
           edgeModel,
         });
       } else {
@@ -242,53 +242,14 @@ class Anchor extends Component<IProps, IState> {
         });
       }
     }
-    if ((!nodeInfo || !nodeInfo.node) && edgeInfo && edgeInfo.edge) {
-      const targetEdge = edgeInfo.edge;
-      const anchorId = edgeInfo.anchor.id;
-      const targetInfoId = `${nodeModel.id}_${targetEdge.id}_${anchorId}_${id}`;
-      const {
-        isAllPass: isSourcePass,
-        msg: sourceMsg,
-      } = this.sourceRuleResults.get(targetInfoId) || {};
-      const {
-        isAllPass: isTargetPass,
-        msg: targetMsg,
-      } = this.targetRuleResults.get(targetInfoId) || {};
-      if (isSourcePass && isTargetPass) {
-        targetEdge.setElementState(ElementState.DEFAULT);
-        const edgeModel = graphModel.addEdge({
-          type: edgeType,
-          sourceNodeId: nodeModel.id,
-          sourceAnchorId: id,
-          startPoint: { x, y },
-          targetNodeId: edgeInfo.edge.id,
-          targetAnchorId: edgeInfo.anchor.id,
-          endPoint: { x: edgeInfo.anchor.x, y: edgeInfo.anchor.y },
-        });
-        const { anchorData } = this.props;
-        graphModel.eventCenter.emit(EventType.ANCHOR_DROP, {
-          data: anchorData,
-          e: event,
-          nodeModel,
-          edgeModel,
-        });
-      } else {
-        const edgeData = targetEdge.getData();
-        graphModel.eventCenter.emit(EventType.CONNECTION_NOT_ALLOWED, {
-          data: edgeData,
-          msg: targetMsg || sourceMsg,
-        });
-      }
-    }
   };
   moveAnchorEnd(endX: number, endY: number) {
-    const { graphModel, nodeModel, anchorData } = this.props;
-    const nodeInfo = targetNodeInfo({ x: endX, y: endY }, graphModel);
-    const edgeInfo = targetEdgeInfo({ x: endX, y: endY }, graphModel);
-    if (nodeInfo && !edgeInfo) {
-      const targetNode = nodeInfo.node;
-      const anchorId = nodeInfo.anchor.id;
-      if (this.preTargetNode && this.preTargetNode !== nodeInfo.node) {
+    const { graphModel, nodeOrEdgeModel, anchorData } = this.props;
+    const info = targetNodeInfo({ x: endX, y: endY }, graphModel);
+    if (info) {
+      const targetNode = info.node;
+      const anchorId = info.anchor.id;
+      if (this.preTargetNode && this.preTargetNode !== info.node) {
         this.preTargetNode.setElementState(ElementState.DEFAULT);
       }
       // #500 不允许锚点自己连自己, 在锚点一开始连接的时候, 不触发自己连接自己的校验。
@@ -297,21 +258,22 @@ class Anchor extends Component<IProps, IState> {
       }
       this.preTargetNode = targetNode;
       // 支持节点的每个锚点单独设置是否可连接，因此规则key去nodeId + anchorId作为唯一值
-      const targetInfoId = `${nodeModel.id}_${targetNode.id}_${anchorId}_${anchorData.id}`;
+      const targetInfoId = `${nodeOrEdgeModel.id}_${targetNode.id}_${anchorId}_${anchorData.id}`;
 
       // 查看鼠标是否进入过target，若有检验结果，表示进入过, 就不重复计算了。
       if (!this.targetRuleResults.has(targetInfoId)) {
-        const targetAnchor = nodeInfo.anchor;
-        const sourceRuleResult = nodeModel.isAllowConnectedAsSource(
+        const targetAnchor = info.anchor;
+        const sourceRuleResult = nodeOrEdgeModel.isAllowConnectedAsSource(
           targetNode,
           anchorData,
           targetAnchor,
         );
-        const targetRuleResult = targetNode.isAllowConnectedAsTarget(
-          nodeModel,
-          anchorData,
-          targetAnchor,
-        );
+        // const targetRuleResult = targetNode.isAllowConnectedAsTarget(
+        //   nodeOrEdgeModel,
+        //   anchorData,
+        //   targetAnchor,
+        // );
+        const targetRuleResult = true;
         this.sourceRuleResults.set(
           targetInfoId,
           formateAnchorConnectValidateData(sourceRuleResult),
@@ -328,50 +290,6 @@ class Anchor extends Component<IProps, IState> {
         targetNode.setElementState(ElementState.ALLOW_CONNECT);
       } else {
         targetNode.setElementState(ElementState.NOT_ALLOW_CONNECT);
-      }
-    } else if (!nodeInfo && edgeInfo) {
-      const targetEdge = edgeInfo.edge;
-      const anchorId = edgeInfo.anchor.id;
-      if (this.preTargetNode && this.preTargetNode !== edgeInfo.edge) {
-        this.preTargetNode.setElementState(ElementState.DEFAULT);
-      }
-      // #500 不允许锚点自己连自己, 在锚点一开始连接的时候, 不触发自己连接自己的校验。
-      if (anchorData.id === anchorId) {
-        return;
-      }
-      this.preTargetNode = targetEdge;
-      // 支持节点的每个锚点单独设置是否可连接，因此规则key去nodeId + anchorId作为唯一值
-      const targetInfoId = `${nodeModel.id}_${targetEdge.id}_${anchorId}_${anchorData.id}`;
-
-      // 查看鼠标是否进入过target，若有检验结果，表示进入过, 就不重复计算了。
-      if (!this.targetRuleResults.has(targetInfoId)) {
-        const targetAnchor = edgeInfo.anchor;
-        const sourceRuleResult = nodeModel.isAllowConnectedAsSource(
-          targetEdge,
-          anchorData,
-          targetAnchor,
-        );
-        const targetRuleResult = targetEdge.isAllowConnectedAsTarget(
-          nodeModel,
-          anchorData,
-          targetAnchor,
-        );
-        this.sourceRuleResults.set(
-          targetInfoId,
-          formateAnchorConnectValidateData(sourceRuleResult),
-        );
-        this.targetRuleResults.set(
-          targetInfoId,
-          formateAnchorConnectValidateData(targetRuleResult),
-        );
-      }
-      const { isAllPass: isSourcePass } = this.sourceRuleResults.get(targetInfoId);
-      const { isAllPass: isTargetPass } = this.targetRuleResults.get(targetInfoId);
-      // 实时提示出即将链接的锚点
-      if (isSourcePass && isTargetPass) {
-        targetEdge.setElementState(ElementState.ALLOW_CONNECT);
-      } else {
-        targetEdge.setElementState(ElementState.NOT_ALLOW_CONNECT);
       }
     } else if (this.preTargetNode && this.preTargetNode.state !== ElementState.DEFAULT) {
       // 为了保证鼠标离开的时候，将上一个节点状态重置为正常状态。
@@ -425,4 +343,4 @@ class Anchor extends Component<IProps, IState> {
   }
 }
 
-export default Anchor;
+export default AnchorInLine;

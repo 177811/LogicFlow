@@ -6,9 +6,11 @@ import { Point, Direction, EdgeConfig } from '../type/index';
 import { getCorssPointOfLine, isInSegment } from '../algorithm/edge';
 import { SegmentDirection } from '../constant/constant';
 import {
-  getNodeBBox, isInNode, distance,
+  getNodeBBox, isInNode, distance, getEdgeBBox,
 } from './node';
 import { getVerticalPointOfLine } from '../algorithm';
+import baseEdgeModel from '../model/edge/BaseEdgeModel';
+import baseEdgeAnchorModel from '../model/edge/BaseEdgeAnchorModel';
 
 /* 手动创建边时edge->edgeModel */
 export const setupEdgeModel = (edge, graphModel) => {
@@ -441,8 +443,14 @@ export const pathFinder = (
   return [start, goal];
 };
 
-export const getBoxByOriginNode = (node: BaseNode): PBBox => {
-  const bbox = getNodeBBox(node);
+export const getBoxByOriginNode = (node: BaseNode|baseEdgeAnchorModel): PBBox => {
+  let bbox;
+  if (node instanceof BaseNode) {
+    bbox = getNodeBBox(node);
+  }
+  if (node instanceof baseEdgeAnchorModel) {
+    bbox = getEdgeBBox(node);
+  }
   return bbox;
 };
 /* 保证一条直线上只有2个节点： 删除x/y相同的中间节点 */
@@ -468,7 +476,7 @@ export const getPolylinePoints = (
   start: PolyPoint,
   end: PolyPoint,
   sNode: BaseNode,
-  tNode: BaseNode,
+  tNode: BaseNode|baseEdgeAnchorModel,
   offset: number,
 ): PolyPoint[] => {
   const sBBox = getBoxByOriginNode(sNode);

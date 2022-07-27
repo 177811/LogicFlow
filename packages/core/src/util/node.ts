@@ -1,5 +1,6 @@
 import { pick } from 'lodash-es';
 import BaseNode from '../model/node/BaseNodeModel';
+import BaseEdgeAnchorModel from '../model/edge/BaseEdgeAnchorModel';
 import CircleNode from '../model/node/CircleNodeModel';
 import RectNode from '../model/node/RectNodeModel';
 import EllipseNode from '../model/node/EllipseNodeModel';
@@ -22,9 +23,13 @@ export const getAnchors = (data): Point[] => {
   } = data;
   return anchors;
 };
-
 type NodeContaint = {
   node: BaseNode;
+  anchorIndex: number;
+  anchor: AnchorConfig;
+};
+type EdgeContaint = {
+  edge: BaseEdgeAnchorModel;
   anchorIndex: number;
   anchor: AnchorConfig;
 };
@@ -50,9 +55,31 @@ export const targetNodeInfo = (position: Point, graphModel: GraphModel): NodeCon
         }
       }
     }
-
   }
   return nodeInfo;
+};
+export const targetEdgeInfo = (position: Point, graphModel: GraphModel): EdgeContaint => {
+  const { edges } = graphModel;
+  let edgeInfo;
+  for (let i = edges.length - 1; i >= 0; i--) {
+    const targetEdge = edges[i];
+    const inEdge = isInEdgeBbox(position, targetEdge);
+    if (inEdge) {
+      const anchorInfo = getClosestEdgeAnchor(position, targetEdge as BaseEdgeAnchorModel);
+      if (anchorInfo) { // 不能连接到没有锚点的节点
+        const currentEdgeInfo = {
+          edge: targetEdge,
+          anchorIndex: anchorInfo.index,
+          anchor: anchorInfo.anchor,
+        };
+        // fix: 489; 多个节点重合时，连线连接上面的那一个。
+        if (!edgeInfo || isEdgeHigher(targetEdge, edgeInfo.edge, graphModel)) {
+          edgeInfo = currentEdgeInfo;
+        }
+      }
+    }
+  }
+  return edgeInfo;
 };
 /**
  * 比较两个节点
@@ -66,7 +93,15 @@ const isNodeHigher = (node1, node2, graphModel) => {
   }
   return false;
 };
-
+const isEdgeHigher = (edge1, edge2, graphModel) => {
+  if (edge1.zIndex > edge2.zIndex) {
+    return true;
+  }
+  if (graphModel.edgesMap[edge1.id].index > graphModel.edgesMap[edge2.id].index) {
+    return true;
+  }
+  return false;
+};
 type AnchorInfo = {
   index: number,
   anchor: Point,
@@ -93,7 +128,28 @@ const getClosestAnchor = (position: Point, node: BaseNode): AnchorInfo => {
   }
   return closest;
 };
-
+/* 手动边时获取边上目标节点上，距离目标位置最近的锚点 */
+const getClosestEdgeAnchor = (position: Point, edge: BaseEdgeAnchorModel): AnchorInfo => {
+  const anchors = getAnchors(edge);
+  let closest;
+  let minDistance = Number.MAX_SAFE_INTEGER;
+  for (let i = 0; i < anchors.length; i++) {
+    const len = distance(position.x, position.y, anchors[i].x, anchors[i].y);
+    if (len < minDistance) {
+      minDistance = len;
+      closest = {
+        index: i,
+        anchor: {
+          ...anchors[i],
+          x: anchors[i].x,
+          y: anchors[i].y,
+          id: anchors[i].id,
+        },
+      };
+    }
+  }
+  return closest;
+};
 /* 两点之间距离 */
 export const distance = (
   x1: number, y1: number, x2: number, y2: number,
@@ -112,6 +168,18 @@ export const isInNode = (position: Point, node: BaseNode): boolean => {
   }
   return inNode;
 };
+export const isInEdge = (position: Point, edge: BaseEdgeAnchorModel): boolean => {
+  let inEdge = false;
+  const offset = 0;
+  const bBox = getEdgeBBox(edge);
+  if (position.x >= bBox.minX - offset
+    && position.x <= bBox.maxX + offset
+    && position.y >= bBox.minY - offset
+    && position.y <= bBox.maxY + offset) {
+    inEdge = true;
+  }
+  return inEdge;
+};
 export const isInNodeBbox = (position: Point, node): boolean => {
   let inNode = false;
   const offset = 5;
@@ -123,6 +191,18 @@ export const isInNodeBbox = (position: Point, node): boolean => {
     inNode = true;
   }
   return inNode;
+};
+export const isInEdgeBbox = (position: Point, edge): boolean => {
+  let inEdge = false;
+  const offset = 5;
+  const bBox = getEdgeBBox(edge);
+  if (position.x >= bBox.minX - offset
+    && position.x <= bBox.maxX + offset
+    && position.y >= bBox.minY - offset
+    && position.y <= bBox.maxY + offset) {
+    inEdge = true;
+  }
+  return inEdge;
 };
 
 export type NodeBBox = {
@@ -137,7 +217,12 @@ export type NodeBBox = {
   centerX: number;
   centerY: number;
 };
-
+export type EdgeBBox = {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+};
 /* 获取节点bbox */
 export const getNodeBBox = (node: BaseNode): NodeBBox => {
   const {
@@ -157,6 +242,47 @@ export const getNodeBBox = (node: BaseNode): NodeBBox => {
     height,
     centerX: x,
     centerY: y,
+  };
+  return bBox;
+};
+export const getEdgeBBox = (edge: BaseEdgeAnchorModel): EdgeBBox => {
+  const {
+    pointsList,
+  } = edge;
+  let minX = null; let minY = null; let maxX = null; let maxY = null;
+  pointsList.forEach((arr) => {
+    if (maxX) {
+      if (arr.x > maxX) {
+        maxX = arr.x;
+      } else if (minX) {
+        if (minX > arr.x) {
+          minX = arr.x;
+        }
+      } else {
+        minX = arr.x;
+      }
+    } else {
+      maxX = arr.x;
+    }
+    if (maxY) {
+      if (arr.y > maxY) {
+        maxY = arr.y;
+      } else if (minY) {
+        if (minY > arr.y) {
+          minY = arr.y;
+        }
+      } else {
+        minY = arr.y;
+      }
+    } else {
+      maxY = arr.y;
+    }
+  });
+  const bBox = {
+    minX,
+    minY,
+    maxX,
+    maxY,
   };
   return bBox;
 };

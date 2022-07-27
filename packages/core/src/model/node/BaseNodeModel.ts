@@ -26,6 +26,7 @@ import { formatData } from '../../util/compatible';
 import { pickNodeConfig } from '../../util/node';
 import { getZIndex } from '../../util/zIndex';
 import { BaseEdgeModel } from '../edge';
+import BaseEdgeAnchorModel from '../edge/BaseEdgeAnchorModel';
 
 export type ConnectRule = {
   message: string;
@@ -294,7 +295,7 @@ export default class BaseNodeModel implements IBaseNodeModel {
    * 在边的时候，是否允许这个节点为source节点，边到target节点。
    */
   isAllowConnectedAsSource(
-    target: BaseNodeModel,
+    target: BaseNodeModel|BaseEdgeAnchorModel,
     soureAnchor: AnchorConfig,
     targetAnchor: AnchorConfig,
   ): ConnectRuleResult | Boolean {
