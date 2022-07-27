@@ -12,7 +12,7 @@
   "types": "types/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/didi/LogicFlow",
+    "url": "https://github.com/177811/LogicFlow",
     "directory": "packages/core"
   },
   "scripts": {
@@ -98,5 +98,5 @@
     "last 2 versions",
     "not ie <= 11"
   ],
-  "gitHead": "45caf440666c9bac55d9ff38097b78fad88c460f"
+  "gitHead": "39073ac28bd363dc5147dd2c99873495b4bdbc39"
 }
