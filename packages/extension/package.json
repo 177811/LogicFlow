@@ -1,6 +1,6 @@
 {
   "name": "@helinda-test-logicflow/extension",
-  "version": "1.1.28",
+  "version": "1.1.29",
   "description": "LogicFlow extension",
   "main": "cjs/index.js",
   "module": "es/index.js",
