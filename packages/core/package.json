@@ -15,6 +15,9 @@
     "url": "https://github.com/177811/LogicFlow",
     "directory": "packages/core"
   },
+ "publishConfig": {
+  "access": "public"
+ },
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --client-log-level warning --config scripts/webpack.config.dev.js",
     "clean": "rimraf dist lib esm cjs",
@@ -98,5 +101,5 @@
     "last 2 versions",
     "not ie <= 11"
   ],
-  "gitHead": "09fd8abff1dea3a3619d9e715537099c10e95fce"
+  "gitHead": "b2595ff0d9531ab14b2021e5144e2d09057e2896"
 }
