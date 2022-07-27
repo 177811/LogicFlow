@@ -54,6 +54,9 @@
       "path": "./node_modules/cz-lerna-changelog"
     }
   },
+ "publishConfig": {
+  "access": "public"
+ },
   "lint-staged": {
     "*.{ts,tsx}": "npm run lint"
   }
