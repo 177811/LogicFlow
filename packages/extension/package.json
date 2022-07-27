@@ -1,5 +1,5 @@
 {
-  "name": "@logicflow/extension",
+  "name": "@helinda-test-logicflow/extension",
   "version": "1.1.23",
   "description": "LogicFlow extension",
   "main": "cjs/index.js",
@@ -84,5 +84,5 @@
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3"
   },
-  "gitHead": "ab8cc6126e9dfa5c4fb18037538a374d3a0b0521"
+  "gitHead": "45caf440666c9bac55d9ff38097b78fad88c460f"
 }
