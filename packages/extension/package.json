@@ -8,7 +8,7 @@
   "types": "es/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/177811/LogicFlow",
+    "url": "https://github.com/didi/LogicFlow",
     "directory": "packages/extension"
   },
   "publishConfig": {
@@ -35,7 +35,7 @@
     "readme.md"
   ],
   "dependencies": {
-    "@logicflow/core": "^1.1.23",
+    "@helinda-test-logicflow/core": "^1.1.23",
     "ids": "^1.0.0",
     "preact": "^10.4.8"
   },

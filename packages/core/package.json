@@ -12,7 +12,7 @@
   "types": "types/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/177811/LogicFlow",
+    "url": "https://github.com/didi/LogicFlow",
     "directory": "packages/core"
   },
   "publishConfig": {
