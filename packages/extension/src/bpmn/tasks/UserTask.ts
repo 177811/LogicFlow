@@ -1,4 +1,4 @@
-import { h, RectNode, RectNodeModel } from '@logicflow/core';
+import { h, RectNode, RectNodeModel } from '@helinda-test-logicflow/core';
 import { getBpmnId } from '../getBpmnId';
 
 class UserTaskModel extends RectNodeModel {

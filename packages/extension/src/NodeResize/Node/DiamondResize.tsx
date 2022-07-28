@@ -1,4 +1,4 @@
-import { BaseNodeModel, GraphModel, h, DiamondNode, DiamondNodeModel } from '@logicflow/core';
+import { BaseNodeModel, GraphModel, h, DiamondNode, DiamondNodeModel } from '@helinda-test-logicflow/core';
 import ControlGroup from '../Control/ControlGroup';
 import Polygon from '../BasicShape/Polygon';
 

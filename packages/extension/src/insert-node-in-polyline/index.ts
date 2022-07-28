@@ -1,4 +1,4 @@
-import LogicFlow, { PolylineEdgeModel } from '@logicflow/core';
+import LogicFlow, { PolylineEdgeModel } from '@helinda-test-logicflow/core';
 import { isNodeInSegement } from './edge';
 
 class InsertNodeInPolyline {

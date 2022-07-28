@@ -1,5 +1,5 @@
 import _ from 'lodash-es';
-import { h, PolygonNode, PolygonNodeModel } from '@logicflow/core';
+import { h, PolygonNode, PolygonNodeModel } from '@helinda-test-logicflow/core';
 
 class NodeSelectionView extends PolygonNode {
   d = 10;

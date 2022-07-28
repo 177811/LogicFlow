@@ -1,4 +1,4 @@
-import LogicFlow, { BaseNodeModel } from '@logicflow/core';
+import LogicFlow, { BaseNodeModel } from '@helinda-test-logicflow/core';
 
 // 后续并入FlowPath
 const getPath = (id: string, lf: LogicFlow) => {

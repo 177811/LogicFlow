@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import { BaseNodeModel, GraphModel } from '@logicflow/core';
+import { BaseNodeModel, GraphModel } from '@helinda-test-logicflow/core';
 import Control from './Control';
 import Rect from '../BasicShape/Rect';
 

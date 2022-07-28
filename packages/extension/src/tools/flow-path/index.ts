@@ -3,7 +3,7 @@
  * 需要指定开始节点类型。
  */
 
-import LogicFlow from '@logicflow/core';
+import LogicFlow from '@helinda-test-logicflow/core';
 import { getBpmnId } from '../../bpmn/getBpmnId';
 
 type Path = {

@@ -1,4 +1,4 @@
-import LogicFlow, { BaseNodeModel } from '@logicflow/core';
+import LogicFlow, { BaseNodeModel } from '@helinda-test-logicflow/core';
 import GroupNode from './GroupNode';
 
 type BaseNodeId = string;

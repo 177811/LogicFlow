@@ -1,4 +1,4 @@
-import { RectNode, h } from '@logicflow/core';
+import { RectNode, h } from '@helinda-test-logicflow/core';
 
 export class RectLabelNodeView extends RectNode {
   getLabelShape() {

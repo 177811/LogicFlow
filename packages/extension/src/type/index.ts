@@ -1,4 +1,4 @@
-import { BaseNodeModel } from '@logicflow/core';
+import { BaseNodeModel } from '@helinda-test-logicflow/core';
 
 type PointTuple = [number, number];
 

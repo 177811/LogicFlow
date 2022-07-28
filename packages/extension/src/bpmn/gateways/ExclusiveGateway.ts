@@ -1,4 +1,4 @@
-import { h, PolygonNode, PolygonNodeModel } from '@logicflow/core';
+import { h, PolygonNode, PolygonNodeModel } from '@helinda-test-logicflow/core';
 import { getBpmnId } from '../getBpmnId';
 import { ExclusiveGatewayAttribute } from '../../type/index';
 

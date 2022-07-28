@@ -1,4 +1,4 @@
-import { Extension, PolylineEdge, PolylineEdgeModel, h } from '@logicflow/core';
+import { Extension, PolylineEdge, PolylineEdgeModel, h } from '@helinda-test-logicflow/core';
 
 interface CurvedEdgePlugin extends Extension {
   [x: string]: any;

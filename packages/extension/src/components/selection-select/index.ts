@@ -1,4 +1,4 @@
-import LogicFlow, { PointTuple } from '@logicflow/core';
+import LogicFlow, { PointTuple } from '@helinda-test-logicflow/core';
 
 class SelectionSelect {
   __domContainer: HTMLElement;

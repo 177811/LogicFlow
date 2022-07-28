@@ -1,4 +1,4 @@
-import { h, RectNode, RectNodeModel } from '@logicflow/core';
+import { h, RectNode, RectNodeModel } from '@helinda-test-logicflow/core';
 
 class MarkContentOptionModel extends RectNodeModel {
   static extendKey = 'MarkContentOptionModel';

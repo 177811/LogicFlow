@@ -1,4 +1,4 @@
-import { h } from '@logicflow/core';
+import { h } from '@helinda-test-logicflow/core';
 
 export default function Ellipse(props) {
   const {

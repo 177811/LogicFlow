@@ -1,4 +1,4 @@
-import { CircleNode, CircleNodeModel } from '@logicflow/core';
+import { CircleNode, CircleNodeModel } from '@helinda-test-logicflow/core';
 import { getBpmnId } from '../getBpmnId';
 
 class StartEventModel extends CircleNodeModel {

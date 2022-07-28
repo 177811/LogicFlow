@@ -1,4 +1,4 @@
-import { BaseNodeModel, GraphModel, h, RectNode, RectNodeModel } from '@logicflow/core';
+import { BaseNodeModel, GraphModel, h, RectNode, RectNodeModel } from '@helinda-test-logicflow/core';
 import ControlGroup from '../Control/ControlGroup';
 
 interface IProps {

@@ -1,4 +1,4 @@
-import LogicFlow from '@logicflow/core';
+import LogicFlow from '@helinda-test-logicflow/core';
 
 type ControlItem = {
   key: string;

@@ -1,4 +1,4 @@
-// import LogicFlow from '@logicflow/core';
+// import LogicFlow from '@helinda-test-logicflow/core';
 import StartEvent, { StartEventModel, StartEventView } from './events/StartEvent';
 import EndEvent, { EndEventView, EndEventModel } from './events/EndEvent';
 import ExclusiveGateway, { ExclusiveGatewayView, ExclusiveGatewayModel } from './gateways/ExclusiveGateway';

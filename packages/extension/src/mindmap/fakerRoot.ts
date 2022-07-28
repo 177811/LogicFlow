@@ -1,4 +1,4 @@
-import { BaseNode, RectNodeModel } from '@logicflow/core';
+import { BaseNode, RectNodeModel } from '@helinda-test-logicflow/core';
 
 class MarkRootModel extends RectNodeModel {
   static extendKey = 'MarkRootModel';

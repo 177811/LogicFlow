@@ -1,4 +1,4 @@
-import { PolylineEdge, PolylineEdgeModel } from '@logicflow/core';
+import { PolylineEdge, PolylineEdgeModel } from '@helinda-test-logicflow/core';
 import { getBpmnId } from '../getBpmnId';
 
 class SequenceFlowModel extends PolylineEdgeModel {

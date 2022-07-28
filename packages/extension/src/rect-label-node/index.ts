@@ -1,4 +1,4 @@
-import { RectNodeModel } from '@logicflow/core';
+import { RectNodeModel } from '@helinda-test-logicflow/core';
 import { RectLabelNodeView } from './RectLabelNodeView';
 
 const RectLabelNode = {
