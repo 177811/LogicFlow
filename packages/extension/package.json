@@ -1,6 +1,6 @@
 {
   "name": "@helinda-test-logicflow/extension",
-  "version": "1.1.32",
+  "version": "1.1.33",
   "description": "LogicFlow extension",
   "main": "cjs/index.js",
   "module": "es/index.js",
@@ -35,7 +35,7 @@
     "readme.md"
   ],
   "dependencies": {
-    "@helinda-test-logicflow/core": "^1.1.31",
+    "@helinda-test-logicflow/core": "^1.1.32",
     "ids": "^1.0.0",
     "preact": "^10.4.8"
   },

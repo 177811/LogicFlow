@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.33](https://github.com/didi/LogicFlow/compare/@helinda-test-logicflow/extension@1.1.32...@helinda-test-logicflow/extension@1.1.33) (2022-08-01)
+
+**Note:** Version bump only for package @helinda-test-logicflow/extension
+
+
+
+
+
 ## [1.1.32](https://github.com/didi/LogicFlow/compare/@helinda-test-logicflow/extension@1.1.31...@helinda-test-logicflow/extension@1.1.32) (2022-07-28)
 
 **Note:** Version bump only for package @helinda-test-logicflow/extension
