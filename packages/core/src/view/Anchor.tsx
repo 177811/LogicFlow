@@ -204,6 +204,7 @@ class Anchor extends Component<IProps, IState> {
     }
     // 没有draging就结束边
     if (!draging) return;
+    // 连接的是node节点的锚点
     if ((!edgeInfo || !edgeInfo.edge) && nodeInfo && nodeInfo.node) {
       const targetNode = nodeInfo.node;
       const anchorId = nodeInfo.anchor.id;
@@ -242,6 +243,7 @@ class Anchor extends Component<IProps, IState> {
         });
       }
     }
+    // 连接的是edge节点的锚点
     if ((!nodeInfo || !nodeInfo.node) && edgeInfo && edgeInfo.edge) {
       const targetEdge = edgeInfo.edge;
       const anchorId = edgeInfo.anchor.id;

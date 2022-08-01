@@ -548,6 +548,7 @@ export default class PolylineEdgeAnchorModel extends BaseEdgeAnchorModel {
             && station <= edgePointLengthList[i].endLength) {
             anchorList.push({
               id: `${this.id}-${arr.id ? arr.id : 'null'}-${index}`,
+              edgeAddable: false,
               // eslint-disable-next-line no-nested-ternary
               x: edgePointLengthList[i].startX === edgePointLengthList[i].endX
                 ? edgePointLengthList[i].startX
@@ -568,11 +569,11 @@ export default class PolylineEdgeAnchorModel extends BaseEdgeAnchorModel {
     }
     return anchorList;
   }
-  moveEdgeAnchor(nodeId: BaseEdgeModelId) {
+  moveEdgeAnchor(edgeId: BaseEdgeModelId) {
     /* 更新相关边位置 */
     for (let i = 0; i < this.graphModel.edges.length; i++) {
       const edgeModel = this.graphModel.edges[i];
-      if (edgeModel.id === nodeId) {
+      if (edgeModel.id === edgeId) {
         const anchors = edgeModel.getDefaultAnchor();
         this.graphModel.edges.forEach((edge) => {
           const { x, y } = edge.textPosition;

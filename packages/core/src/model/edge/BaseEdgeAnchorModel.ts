@@ -534,6 +534,7 @@ class BaseEdgeAnchorModel implements IBaseModel {
           el = el as PointTuple; // 历史数据格式
           return {
             id: `${id}_${idx}`,
+            edgeAddable: false,
             x: startPoint.x + el[0],
             y: startPoint.y + el[1],
           };
@@ -543,6 +544,7 @@ class BaseEdgeAnchorModel implements IBaseModel {
           ...el,
           x: startPoint.x + el.x,
           y: startPoint.y + el.y,
+          edgeAddable: false,
           id: el.id || `${id}_${idx}`,
         };
       });

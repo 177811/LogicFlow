@@ -5,6 +5,7 @@ import BaseEdgeModel from './edge/BaseEdgeModel';
 import EditConfigModel from './EditConfigModel';
 import TransfromModel from './TransformModel';
 import { IBaseModel } from './BaseModel';
+import { PolylineEdgeAnchorModel } from './edge/PolylineEdgeAnchorModel';
 import {
   ElementState, ModelType, EventType, ElementMaxzIndex, ElementType, OverlapMode,
 } from '../constant/constant';
@@ -784,6 +785,10 @@ class GraphModel {
       // 如果有文案了，当节点移动引起文案位置修改时，找出当前文案位置与最新边距离最短距离的点
       // 最大程度保持节点位置不变且在边上
       if (nodeAsSource || nodeAsTarget) {
+        // 如果这个边上有锚点，移动相关关联的边
+        if (edgeModel instanceof PolylineEdgeAnchorModel) {
+          edgeModel.moveEdgeAnchor(edgeModel.id);
+        }
         // todo: 找到更好的边位置移动处理方式
         // 如果是自定义边文本位置，则移动节点的时候重新计算其位置
         if (edgeModel.customTextPosition === true) {

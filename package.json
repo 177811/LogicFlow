@@ -1,11 +1,11 @@
 {
   "name": "helinda-test-logicflow",
-  "private": false,
+  "private": true,
   "description": "一款高拓展性、重执行、专业的流程图编辑框架",
   "license": "Apache-2.0",
   "author": "LogicFlow-Team",
   "workspaces": [
-    "packages/*"
+    "packages/core/*"
   ],
   "scripts": {
     "dev:core": "npm run build:types && npm run build && cd packages/core && npm run dev",
