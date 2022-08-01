@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "author": "LogicFlow-Team",
   "workspaces": [
-    "packages/core/*"
+    "packages/*"
   ],
   "scripts": {
     "dev:core": "npm run build:types && npm run build && cd packages/core && npm run dev",
