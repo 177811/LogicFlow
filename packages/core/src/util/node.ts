@@ -249,7 +249,14 @@ export const getEdgeBBox = (edge: BaseEdgeAnchorModel): EdgeBBox => {
   const {
     pointsList,
   } = edge;
-  let minX = null; let minY = null; let maxX = null; let maxY = null;
+  let minX = null;
+  let minY = null;
+  let maxX = null;
+  let maxY = null;
+  let x = null;
+  let y = null;
+  let width = null;
+  let height = null;
   pointsList.forEach((arr) => {
     if (maxX) {
       if (arr.x > maxX) {
@@ -278,11 +285,21 @@ export const getEdgeBBox = (edge: BaseEdgeAnchorModel): EdgeBBox => {
       maxY = arr.y;
     }
   });
+  width = maxX - minX;
+  height = maxY - minY;
+  x = minX + width / 2;
+  y = minY + height / 2;
   const bBox = {
     minX,
     minY,
     maxX,
     maxY,
+    x,
+    y,
+    width,
+    height,
+    centerX: x,
+    centerY: y,
   };
   return bBox;
 };
